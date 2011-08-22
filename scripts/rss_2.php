@@ -15,10 +15,10 @@ function write_item($feed) {
 
     $src_url=$feed->news_feed_url();
     $src_title = $feed->title();   ;
-	$link = $feed->url();	
+	$link = $feed->url() . '#' . $feed->rss_id() ;	
     $title = $feed->title();   	
 	$date = $feed->date();
-    $guid = $link . '#' . $feed->rss_id() ;
+    $guid = $link;
 	$desc = $feed->description();
   
 echo <<<ITEM
