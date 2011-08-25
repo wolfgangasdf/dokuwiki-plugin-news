@@ -1,6 +1,16 @@
 <?php
-//define ("DOKU_DIR", dirname(__FILE__). '/../../');
-require_once  './inc/init.php';
+/* This file can go into either the top level Dokuwiki Driectory or <dokuwki>/lib/exe */
+$lib_exe = false;
+if(strpos(dirname(__FILE__), 'lib/exe')) {
+   define("INC_DIR", "../../inc");
+   $lib_exe = true;
+}
+else {
+  define("INC_DIR", "./inc"); 
+ }
+
+require_once  INC_DIR . '/init.php';
+
 include DOKU_INC . "lib/plugins/news/scripts/feedData.php";
 
 class externalNewsFeed extends feedData {
@@ -79,6 +89,11 @@ HEAD;
 	}
 
 }
- // new externalNewsFeed('tmp.xml');
-  new externalNewsFeed();
+
+
+ 
+  if(!$lib_exe) {
+     new externalNewsFeed();
+  }
+  else new externalNewsFeed(DOKU_INC . 'news_feed.xml');
 ?>
