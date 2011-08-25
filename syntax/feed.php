@@ -44,7 +44,6 @@
         
 		function connectTo($mode) {			
 		    $this->Lexer->addSpecialPattern('~~NEWSFEED.*?~~',$mode,'plugin_news_feed');
-			//$this->Lexer->addSpecialPattern('~~NEWSITEMS~~',$mode,'plugin_news_feed');
 		}
      
         /**
@@ -77,9 +76,10 @@
 				  case DOKU_LEXER_SPECIAL : 				  
 				  $this->helper->setUpdate($match);
 				  $metafile = metaFN('newsfeed:timestamp', '.meta');
-				  io_saveFile($metafile,time());
-				  //io_saveFile($metafile,time() ."\n" . DOKU_URL . 'doku.php?id=' . $ID);
-				  $renderer->doc .= "<h4>Our News Feed: " . $metafile ."</h4>"; break;  ;
+				  io_saveFile($metafile,time());				 
+				  $renderer->doc .= ""; 
+				  
+				  break;  ;
 				
                 }
                 return true;
