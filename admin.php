@@ -16,9 +16,12 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
     var $output = '';
 	var $helper;
 	var $pagedata;
-  
+	var $prev_deleted = "";
+    var $is_prev_deleted = array();
+	
+	
   	function admin_plugin_news() {
-		   $this->helper =& plugin_load('helper', 'news');		 
+		   $this->helper =& plugin_load('helper', 'news');	          		   
 		   $this->pagedata = $this->helper->_readFile(metaFN('newsfeed:pagedata', '.ser'),true);    
 	}		
     /**
@@ -28,7 +31,7 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
       
       if (!isset($_REQUEST['cmd'])) return;   // first time - nothing to do
 
-      $this->output = 'invalid';
+      $this->output = '';
       if (!checkSecurityToken()) return;
       if (!is_array($_REQUEST['cmd'])) return;
       
@@ -38,28 +41,87 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
 		   $this->prune(); 
 		   break;
 		case 'confirm' :  
-		   $this->output = 'confirm'; 
+		   $this->confirm();		  
 		   break;
-        case 'restore' :  
-		   $this->restore();
-		   break;
+        case 'restore' :  		
+		   $this->is_prev_deleted =array();
+		   $this->prev_deleted = "";
+		   return;
+		 
       }   
-     
+	  
+          $deleted = array();
+		  if(isset($_REQUEST['delete']) && $_REQUEST['delete']) {
+			$deletes = $_REQUEST['delete'];		  
+			$deleted = array_keys($deletes);	
+		  }
+		  
+		 
+		  if($_REQUEST['prev_del']) {  
+		     $prev_deleted = $_REQUEST['prev_del'];
+			 $prev_deleted = explode(',',$prev_deleted);
+			 $prev_deleted = array_merge($prev_deleted, $deleted);
+			 $prev_deleted = array_unique($prev_deleted);			 
+			 $this->prev_deleted = implode(",", $prev_deleted);
+			 $this->is_prev_deleted = $prev_deleted;
+		  }
+ 
     }
  
     /**
      * output appropriate html
      */
     function html() {
-      ptln('<p>' . $this->getLang('instructions') . '</p>');     
-      ptln('<form action="'.wl($ID).'" method="post" name="news_data">');          
+echo <<<SCRIPTTEXT
+  <style type="text/css">
+   td.right { padding-right: 20px; }
+ </style>
+
+  <script type='text/javascript'>
+  //<![CDATA[
+  
+  function newshandler() {
+ 
+      var prev_del = document.getElementById('prev_del');
+      var inputs = document.getElementsByTagName('input');
+	  var prev = "";
+	  // var teststr = prev_del.value;
+	  
+	  for(var i=0; i<inputs.length;i++) {
+	   if(inputs[i].type == 'checkbox') {	 
+              if(inputs[i].checked  && inputs[i].name.match(/delete/))  {	
+			      prev += inputs[i].value + ',';
+				 }
+		 }		
+	  }	  
+	 
+	  if(prev_del.value && prev) {
+	     prev_del.value += ',' + prev;
+	  }
+	  else if (prev) prev_del.value = prev;
+	  prev_del.value = prev_del.value.replace(/\s*,$/,"");
+	  
+	  
+  }
+  function confirm_del() {
+       
+      if(window.confirm('The deleted feeds will be removed from the current news feed.')) return true;
+	  return false;
+  }
+  //]]>
+  </script>
+SCRIPTTEXT;
+
+      ptln('<div style="width:90%;margin:auto;"><p>' . $this->getLang('instructions') . '</p></div>');     
+      ptln('<form action="'.wl($ID).'" method="post" name="news_data" onsubmit="newshandler(this);">');          
       ptln('  <input type="hidden" name="do"   value="admin" />');
       ptln('  <input type="hidden" name="page" value="'.$this->getPluginName().'" />');
+	  ptln('  <input type="hidden" name="prev_del" id ="prev_del" value="' .$this->prev_deleted. '" />');
       formSecurityToken();
 
       ptln('  <input type="submit" name="cmd[prune]"  value="'.$this->getLang('btn_prune').'" />');
       ptln('  <input type="submit" name="cmd[restore]"  value="'.$this->getLang('btn_restore').'" />');
-	  ptln('  <input type="submit" name="cmd[confirm]"  value="'.$this->getLang('btn_confirm').'" />');
+	  ptln('  <input type="submit" name="cmd[confirm]" onclick="return confirm_del();" value="'.$this->getLang('btn_confirm').'" />');
 	  ptln('<div id="pagedata_news"><br />');
 	  $this->table_header();	 		
 			foreach($this->pagedata as $md5=>$pageinfo) {
@@ -69,11 +131,11 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
 	  $this->table_footer(); 
 	  ptln('</div>'); 
       ptln('</form>');
-       
+     /*  
       ptln('<p><pre>');	  
 	  echo print_r($this->output,true);
       ptln('</pre></p>');	  	  
-
+      */
 	 }
 	 
 	 function table_header() {
@@ -87,33 +149,56 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
 	 }
 	 
 	 function pagedata_row($md5,$info) {
+	   static $inx = 0;
 	   
+	   if(in_array($md5,$this->is_prev_deleted)) return;
+	   
+	   $type = 'delete';
+	   $cb_id =$type . '_' . $inx;
 		ptln('<tr>');
-		
-		$row = $this->cell("<input type = 'checkbox' name ='delete[$md5]' value = '$md5'>");
+				
+		$row = '<td align="center">' . "<input type = 'checkbox'  id='$cb_id'  name ='" . $type . "[$md5]' value = '$md5'>" .'</td>';
 		$row .= $this->cell($info['id'] ) .  $this->cell($info['gmtime']) .  
 		       $this->cell(date('r',$info['time']));
 	    ptln($row);		   
 		ptln('</td></tr>');
+		
+		$index++;
 	 }
 	 function cell($data="") {
-	     return "<td>$data</td>";
+	     return "<td class='right'>$data</td>";
 	 }
 	 function theader($name="") {
 	
 	    return "<th align='center'>$name</th>";  
 	 }
-	 function restore() {
-	    $this->pagedata = $this->helper->_readFile(metaFN('newsfeed:pagedata', '.ser'),true);    
-	 }
 	 
 	 function prune() {
+	     
+		  
 		  $deletes = $_REQUEST['delete'];
-		  $this->output= print_r($deletes,true) ;	  
-		  $deleted = array_keys($deletes);
-		  $this->output .= print_r($deleted,true) ;	  
+		  $deleted = array_keys($deletes);		  
+		 
 		  foreach($deleted as $d) {
 			  unset($this->pagedata[$d]);
 		  }
+		  
+	 }
+	 
+	 function confirm() {
+
+		 $deleted = explode(',',$_REQUEST['prev_del']);
+		  foreach($deleted as $d) {
+			  unset($this->pagedata[$d]);
+		  }
+          $this->helper->_writeFile(metaFN('newsfeed:pagedata', '.ser'),$this->pagedata,true);      
+		  
+  		  foreach($deleted as $d) {
+		     $file = metaFN("newsfeed:$d", '.gz');
+			 if(file_exists($file)) {
+			    @unlink($file);			   
+			 }
+		  }
+        	  
 	 }
 }

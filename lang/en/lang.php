@@ -18,7 +18,7 @@ $lang['invalid'] = 'invalid input detected!';
 
 $lang['instructions'] ='To delete a feed, check the "Delete" checkbox beside the feed name.  Then click 
 the "Delete Selections" button at the top of the screen.  You can delete multiple feeds in a single delete operation
-by checking more than one checkbox.  The deletions are not permanent until you click the
- "Confirm Deletions" button.
+by checking more than one checkbox.  The table listing the feeds will be updated to reflect the
+deletions but deletions will not become permanent until you click the  "Confirm Deletions" button.  
  
 ';
