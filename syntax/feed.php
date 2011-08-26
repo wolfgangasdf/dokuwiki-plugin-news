@@ -1,9 +1,7 @@
     <?php
     /**
-     * Plugin Color: Sets new colors for text and background.
-     * 
-     * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
-     * @author     
+     *  newfeed plugin  
+     * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)       
      */
      
     // must be run within DokuWiki
@@ -33,7 +31,7 @@
                 'email'  => 'turnermm02@shaw.ca',
                 'date'   => '2010-03-19',
                 'name'   => 'news Plugin',
-                'desc'   => 'hides display of enclosed text',
+                'desc'   => 'identifies newsfeed page',
                 'url'    => 'http://www.mturner.org',
             );
         }
