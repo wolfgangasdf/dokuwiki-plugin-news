@@ -9,7 +9,7 @@ if(!defined('DOKU_META')) define('DOKU_META',DOKU_INC.'data/meta/newsfeed/');
 class helper_plugin_news extends Dokuwiki_Plugin {
     var $wasUpdated = false;
 	var $header;
-	var $gm_date;
+	
     function getMethods(){
         $result = array();
 			
@@ -42,9 +42,6 @@ class helper_plugin_news extends Dokuwiki_Plugin {
         return $this->wasUpdated;
     }
     function setUpdate($header=0){	 
-   	    $metafile = metaFN('newsfeed:setUpdate', '.meta');
-		$this->gm_date = gmdate('r');
-		io_saveFile($metafile,$this->gm_date);
 		$this->header = $header;
         $this->wasUpdated = true;
     }
@@ -70,13 +67,14 @@ class helper_plugin_news extends Dokuwiki_Plugin {
 			   
 			return; 
 	   }
-	   	   
+	    $file_path = wikiFN($id); 
+	   	$tm =  filemtime ($file_path);
 	   // update page db
 	    $result = array();
 	    $result['id'] = $id;
 	    $result['url'] = DOKU_URL . 'doku.php?id=' . $id;
-	    $result['time'] = time();
-	    $result['gmtime'] = $this->gm_date;		
+	    $result['time'] = $tm;
+	    $result['gmtime'] = gmdate('r',$tm);		
 		$result['header'] = $this->header;		
 	    $ar[$md_5] = $result;
 	    $this->_writeFile($metafile,$ar,true);
