@@ -96,4 +96,3 @@ HEAD;
      new externalNewsFeed();
   }
   else new externalNewsFeed(DOKU_INC . 'news_feed.xml');
-?>

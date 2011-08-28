@@ -1,5 +1,5 @@
 <?php
-require_once('../../../inc/init.php');
+//require_once('../../../inc/init.php');
 
 class feedData {
     var $meta_data;  // array of meta data entries from meta/newsfeed:pagedata.ser
