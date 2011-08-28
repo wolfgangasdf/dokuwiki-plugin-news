@@ -1,5 +1,4 @@
 <?php
-/* This file can go into either the top level Dokuwiki Driectory or <dokuwki>/lib/exe */
 $lib_exe = false;
 if(strpos(dirname(__FILE__), 'lib/exe')) {
    define("INC_DIR", "../../inc");
@@ -9,90 +8,47 @@ else {
   define("INC_DIR", "./inc"); 
  }
 
+
 require_once  INC_DIR . '/init.php';
+require_once DOKU_INC . "lib/plugins/news/scripts/rss.php";
+global $conf;
+global $newsChannelTitle;
+global $newsChannelDescription;	
 
-include DOKU_INC . "lib/plugins/news/scripts/feedData.php";
+$minute = 60;
+$hour = $minute*60;
+$default_ttl = 720*$hour;  
+$ttl = 0; 
+$filetime = 0;
+$curent_time = time();
+$xml_file = DOKU_INC . 'news_feed.xml';
 
-class externalNewsFeed extends feedData {
-
-function externalNewsFeed($outfile=null) {
-    parent::feedData();
-	$handle = null;
-	
-		if($outfile) {
-			$handle = fopen($outfile,'ab');
-			}
-
-		if($handle) {
-			fwrite($handle,$this->write_header());
-			while($this->feed_data()) {	 
-			   fwrite($handle,$this->write_item());
-			}
-			fwrite($handle,$this->footer());
-		}	
-		else {
-			echo $this->write_header();
-			while($this->feed_data()) {	 
-				echo $this->write_item();
-			}
-		   echo $this->footer();
-		}	
-		
-    }
-	
-
-	function write_item() { 
-
-		$src_url=$this->news_feed_url();
-		$src_title = $this->title();   ;
-		$link = $this->url() . '#' . $this->rss_id() ;	
-		$title = $this->title();   	
-		$date = $this->date();
-		$guid = $link;
-		$desc = $this->description();
-  
-return <<<ITEM
-<item>
-      <title><![CDATA[$title]]></title>
-      <link><![CDATA[$link]]></link>
-      <description><![CDATA[$desc]]></description>
-      <pubDate>$date</pubDate>
-      <guid isPermaLink ="false">$guid</guid>
-      <source url="$src_url"><![CDATA[$src_title]]></source>
- </item>      
-ITEM;
-
-}
-
-
-	function write_header () {
-
-	$date = $this->news_feed_date();
-	$link = $this->news_feed_url();
-
-return <<<HEAD
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0">
-  <channel>
-	<title>fckgLIteDev News Feed</title>
-	<link>$link</link>
-	<description>What is happening on fckgLiteDev</description>
-	<language>en-us</language>
-	<pubDate>$date</pubDate>
-	<ttl>240</ttl>
-HEAD;
-
+	if(isset($conf['plugin']['news'])) {
+		if(isset($conf['plugin']['news']['ttl'])) {
+			$ttl = $conf['plugin']['news']['ttl'];
+			if($ttl) $ttl *= $hour;
+		}
+		if(isset($conf['plugin']['news']['title'])) {
+			$newsChannelTitle = $conf['plugin']['news']['title'];
+		}
+		if(isset($conf['plugin']['news']['desc'])) {
+			$newsChannelDescription = $conf['plugin']['news']['desc'];
+		}
 	}
-
-	function footer() {
-	  return "\n</channel>\n</rss>\n";
+	if(!$ttl) $ttl = $default_ttl;
+    if(@file_exists($xml_file)) {
+	    $filetime = filemtime($xml_file);
 	}
+	
+	$time_elapsed = ($curent_time - $filetime);
+	if($time_elapsed >= $ttl || $lib_exe) {
+		new externalNewsFeed($xml_file);	
+	}
+	if(!$lib_exe) {
+	  readfile($xml_file);
+	  }
 
-}
 
+ exit;
 
- 
-  if(!$lib_exe) {
-     new externalNewsFeed();
-  }
-  else new externalNewsFeed(DOKU_INC . 'news_feed.xml');
+?>

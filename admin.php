@@ -5,7 +5,8 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Myron Turner <turnermm02@shaw.ca>
  */
-
+ if(!defined('DOKU_INC')) die();
+require_once DOKU_INC . "lib/plugins/news/scripts/rss.php";
  
 /**
  * All DokuWiki plugins to extend the admin function
@@ -47,6 +48,10 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
 		   $this->is_prev_deleted =array();
 		   $this->prev_deleted = "";
 		   return;
+		 case 'generate':
+           $this->output=$this->generate();
+		   return;
+           		   
 		 
       }   
 	  
@@ -65,13 +70,14 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
 			 $this->prev_deleted = implode(",", $prev_deleted);
 			 $this->is_prev_deleted = $prev_deleted;
 		  }
- 
+         // $this->output=$this->pagedata;
     }
  
     /**
      * output appropriate html
      */
     function html() {
+	
 echo <<<SCRIPTTEXT
   <style type="text/css">
    td.right { padding-right: 20px; }
@@ -122,6 +128,7 @@ SCRIPTTEXT;
       ptln('  <input type="submit" name="cmd[prune]"  value="'.$this->getLang('btn_prune').'" />');
       ptln('  <input type="submit" name="cmd[restore]"  value="'.$this->getLang('btn_restore').'" />');
 	  ptln('  <input type="submit" name="cmd[confirm]" onclick="return confirm_del();" value="'.$this->getLang('btn_confirm').'" />');
+	  ptln('  <input type="submit" name="cmd[generate]" value="'.$this->getLang('btn_generate').'" />');	  
 	  ptln('<div id="pagedata_news"><br />');
 	  $this->table_header();	 		
 			foreach($this->pagedata as $md5=>$pageinfo) {
@@ -131,11 +138,12 @@ SCRIPTTEXT;
 	  $this->table_footer(); 
 	  ptln('</div>'); 
       ptln('</form>');
-     /*  
-      ptln('<p><pre>');	  
-	  echo print_r($this->output,true);
-      ptln('</pre></p>');	  	  
-      */
+      
+	  if($this->output) {
+		  ptln('<p><pre>');	  
+		  echo print_r($this->output,true);
+		  ptln('</pre></p>');	  	  
+     }
 	 }
 	 
 	 function table_header() {
@@ -200,5 +208,23 @@ SCRIPTTEXT;
 			 }
 		  }
         	  
+	 }
+	 
+	 function generate() {	  
+		    $create_time = 0;
+			
+	        $xml_file = DOKU_INC . 'news_feed.xml';
+            $current_time = time();
+	 		new externalNewsFeed($xml_file);	
+
+			if(@file_exists($xml_file)) {
+			     $create_time= filectime($xml_file);	             
+	         }
+			if($create_time >= $current_time) {
+			   return 'Feed generated: ' . date('r',$create_time) ;
+			}
+			else {
+			   return "A new feed may not have been generated.  Check $xml_file.";
+			}
 	 }
 }

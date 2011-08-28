@@ -1,23 +1,42 @@
 <?php
-include "feedData.php";
+/* This file can go into either the top level Dokuwiki Driectory or <dokuwki>/lib/exe */
+
+
+require_once DOKU_INC . "lib/plugins/news/scripts/feedData.php";
 
 class externalNewsFeed extends feedData {
 
 function externalNewsFeed($outfile=null) {
     parent::feedData();
-	if($outfile) {
-	   $handle = fopen($outfile,'ab');
-	}
-	else { 
-	   $handle = fopen("php://stdout",'ab');
-	 }
-	fwrite($handle,$this->write_header());
-    while($this->feed_data()) {
-        fwrite($handle,$this->write_item());
-    }
-    fwrite($handle,$this->footer());
-}
+	$handle = null;
+	
+		if($outfile) {
+			$handle = fopen($outfile,'wb');
+			if(!flock($handle,LOCK_EX)) {
+			   fclose($handle);
+			   return;
+			}
+		}
 
+		if($handle) {
+			fwrite($handle,$this->write_header());
+			while($this->feed_data()) {	 
+			   fwrite($handle,$this->write_item());
+			}
+			fwrite($handle,$this->footer());
+			flock($handle,LOCK_UN);			
+			fclose($handle);
+		
+		}	
+		else {
+			echo $this->write_header();
+			while($this->feed_data()) {	 
+				echo $this->write_item();
+			}
+		   echo $this->footer();
+		}	
+		
+    }
 	
 
 	function write_item() { 
@@ -48,14 +67,16 @@ ITEM;
 
 	$date = $this->news_feed_date();
 	$link = $this->news_feed_url();
+    $title = $this->channel_title();
+	$desc = $this->channel_description();
 
 return <<<HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
-	<title>fckgLIteDev News Feed</title>
+	<title>$title</title>
 	<link>$link</link>
-	<description>What is happening on fckgLiteDev</description>
+	<description>$desc</description>
 	<language>en-us</language>
 	<pubDate>$date</pubDate>
 	<ttl>240</ttl>
@@ -68,6 +89,6 @@ HEAD;
 	}
 
 }
- // new externalNewsFeed('tmp.xml');
-  new externalNewsFeed();
+
+
 ?>

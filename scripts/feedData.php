@@ -1,5 +1,5 @@
 <?php
-//require_once('../../../inc/init.php');
+
 
 class feedData {
     var $meta_data;  // array of meta data entries from meta/newsfeed:pagedata.ser
@@ -12,16 +12,29 @@ class feedData {
 	var $newsFeedDate;
 	
 	function feedData() {
-	
+		global $newsChannelTitle;
+		global $newsChannelDescription;	
+		
    		$metafile = metaFN('newsfeed:pagedata', '.ser');	         		
 		$this->meta_data = $this->_readFile($metafile, true);	
-		$this->feedDataBaseNames = array_keys($this->meta_data);	
+		$this->get_md5_array();
+
 		$metafile = metaFN('newsfeed:timestamp', '.meta');	         		
         $this->newsFeedDate	= $this->_readFile($metafile);
-		$this->next_data_file(); //initialize
-		
+			
 	}
 
+	function get_md5_array() {
+	     $this->feedDataBaseNames = array(); 
+		 $ar = array_keys($this->meta_data);
+	      foreach($ar as $md5) {
+		      $file= metaFN("newsfeed:$md5", '.gz');
+			  if(@file_exists($file)) {
+			     $this->feedDataBaseNames[] = $md5; 
+			  }
+		  }
+	}
+	
 	function _readFile($file, $ser=false) {
 	    $ret = io_readFile($file,$ser);
 		if($ser) {
@@ -73,6 +86,10 @@ class feedData {
 	    return date('r',$this->newsFeedDate);
 	}
 	
+	function md5_id() {
+	   return $this->currentMD5BaseName;
+	}
+	
     function _dataFN() {
 		$md5 = array_shift($this->feedDataBaseNames);
 		if(!$md5) return false;
@@ -118,6 +135,18 @@ class feedData {
 		return true;
 
     }
+
+	function channel_title() {
+		global $newsChannelTitle;
+		if(!$newsChannelTitle) return 'DokuWiki News Feed';
+		return $newsChannelTitle;
+	}
+	
+	function channel_description() {
+		global $newsChannelDescription;
+		if(!$newsChannelDescription) return  'DokuWiki News Feed';
+		return $newsChannelDescription;
+	}
 }
 
 ?>
