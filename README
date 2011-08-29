@@ -13,11 +13,11 @@ There are two types of markup.  At the top of a page that holds new items, you m
 
 First form: ~~NEWSFEED~~
 If you use the first form, then you bracket your news items with the following markup:
-<news item_title>
+<news: item_title>
 blah blah
 </news>
 
-<news another_item>
+<news: another_item>
 blah blah
 </news>
 

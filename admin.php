@@ -212,7 +212,10 @@ SCRIPTTEXT;
 	 
 	 function generate() {	  
 		    $create_time = 0;
-			
+			global $newsChannelTitle;
+            global $newsChannelDescription;	
+			$newsChannelTitle=$this->getConf('title');
+			$newsChannelDescription=$this->getConf('desc');
 	        $xml_file = DOKU_INC . 'news_feed.xml';
             $current_time = time();
 	 		new externalNewsFeed($xml_file);	
