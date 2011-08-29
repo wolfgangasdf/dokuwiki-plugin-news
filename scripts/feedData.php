@@ -77,7 +77,8 @@ class feedData {
     }      
     
 	function news_feed_url() {
-	   list($server,$rest) = explode('?', $this->url());
+	   list($server,$rest) = explode('?', $this->url());	  
+	   if(!$server) return DOKU_URL; 
 	   return str_replace("doku.php", "",$server);
 	}
 	
