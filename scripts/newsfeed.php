@@ -16,8 +16,7 @@ global $newsChannelTitle;
 global $newsChannelDescription;	
 
 $minute = 60;
-$hour = $minute*60;
-$default_ttl = 720*$hour;  
+$default_ttl = 720*$minute;  
 $ttl = 0; 
 $filetime = 0;
 $curent_time = time();
@@ -26,7 +25,7 @@ $xml_file = DOKU_INC . 'news_feed.xml';
 	if(isset($conf['plugin']['news'])) {
 		if(isset($conf['plugin']['news']['ttl'])) {
 			$ttl = $conf['plugin']['news']['ttl'];
-			if($ttl) $ttl *= $hour;
+			if($ttl) $ttl *= $minute;
 		}
 		if(isset($conf['plugin']['news']['title'])) {
 			$newsChannelTitle = $conf['plugin']['news']['title'];
