@@ -78,11 +78,11 @@ class feedData {
 		return date('r',$this->timestamp());
     }      
     
-	function news_feed_url() {
-	   list($server,$rest) = explode('?', $this->url());	  
-	   if(!$server) return DOKU_URL; 
-	   return str_replace("doku.php", "",$server);
-	}
+      function news_feed_url() {
+           list($server,$rest) = explode('?', $this->url());
+           if(!$server) $server = DOKU_URL;
+           return preg_replace("#/[^/]+/doku.php#", "/",$server);
+        }
 	
 	function news_feed_date($which='gm') {
 	    if($which == 'gm') return gmdate('r',$this->newsFeedDate);
