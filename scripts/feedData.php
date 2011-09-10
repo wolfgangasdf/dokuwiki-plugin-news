@@ -45,8 +45,10 @@ class feedData {
 		
 	}
     function description() {
+          /*
             $this->currentDataArray['item'] = 			 
 			   preg_replace('#(href|src)\s*=\s*([\'\"])/.*?/#ms', "$1=$2" . $this->news_feed_url(), $this->currentDataArray['item']);
+        */			   
 
 	  		return $this->currentDataArray['item'];
     } 
