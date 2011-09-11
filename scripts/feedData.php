@@ -44,14 +44,15 @@ class feedData {
 		return $ret;  
 		
 	}
+	
+	
     function description() {
-          /*
-            $this->currentDataArray['item'] = 			 
-			   preg_replace('#(href|src)\s*=\s*([\'\"])/.*?/#ms', "$1=$2" . $this->news_feed_url(), $this->currentDataArray['item']);
-        */			   
+            $this->currentDataArray['item'] =
+                        preg_replace('#(href|src)\s*=\s*([\'\"])/.*?/#ms', "$1=$2" . $this->news_feed_url(), $this->currentDataArray['item']);
 
-	  		return $this->currentDataArray['item'];
-    } 
+                        return $this->currentDataArray['item'];
+    }
+	
 	
     function rss_id() {
 		return $this->currentDataArray['name'];
@@ -81,7 +82,15 @@ class feedData {
       function news_feed_url() {
            list($server,$rest) = explode('?', $this->url());
            if(!$server) $server = DOKU_URL;
-           return preg_replace("#/[^/]+/doku.php#", "/",$server);
+		   $server = str_replace('doku.php',"",$server); 
+		   
+		   if(!preg_match("#/[^/]+/[^/]+#", $server)) {
+		       return $server;
+		   }
+		   
+   	       return preg_replace("#/[^/]+/*$", "/",$server);
+		   
+		  
         }
 	
 	function news_feed_date($which='gm') {
