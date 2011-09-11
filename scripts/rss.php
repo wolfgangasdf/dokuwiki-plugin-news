@@ -5,8 +5,9 @@
 require_once DOKU_INC . "lib/plugins/news/scripts/feedData.php";
 
 class externalNewsFeed extends feedData {
-
-function externalNewsFeed($outfile=null) {
+var $ttl;
+function externalNewsFeed($outfile=null,$ttl=720) {
+    $this->ttl = $ttl;
     parent::feedData();
 	$handle = null;
 	
@@ -69,7 +70,7 @@ ITEM;
 	$link = $this->news_feed_url();
     $title = $this->channel_title();
 	$desc = $this->channel_description();
-
+    $ttl = $this->ttl;
 return <<<HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
@@ -79,7 +80,7 @@ return <<<HEAD
 	<description>$desc</description>
 	<language>en-us</language>
 	<pubDate>$date</pubDate>
-	<ttl>240</ttl>
+	<ttl>$ttl</ttl>
 HEAD;
 
 	}

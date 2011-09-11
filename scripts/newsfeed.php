@@ -41,7 +41,7 @@ $xml_file = DOKU_INC . 'news_feed.xml';
 	
 	$time_elapsed = ($curent_time - $filetime);
 	if($time_elapsed >= $ttl || $lib_exe) {
-		new externalNewsFeed($xml_file);	
+		new externalNewsFeed($xml_file,$ttl/$minute);	
 	}
 	if(!$lib_exe) {
 	  readfile($xml_file);

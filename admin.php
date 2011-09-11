@@ -216,9 +216,11 @@ SCRIPTTEXT;
             global $newsChannelDescription;	
 			$newsChannelTitle=$this->getConf('title');
 			$newsChannelDescription=$this->getConf('desc');
+			$ttl = $this->getConf('ttl');
 	        $xml_file = DOKU_INC . 'news_feed.xml';
             $current_time = time();
-	 		new externalNewsFeed($xml_file);	
+			
+	 		new externalNewsFeed($xml_file,$ttl);	
 
 			if(@file_exists($xml_file)) {
 			     $create_time= filectime($xml_file);	             
