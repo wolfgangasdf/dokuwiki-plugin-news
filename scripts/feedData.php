@@ -14,7 +14,8 @@ class feedData {
 	function feedData() {
 		global $newsChannelTitle;
 		global $newsChannelDescription;	
-		
+		//global $conf;
+		//print_r($conf);
    		$metafile = metaFN('newsfeed:pagedata', '.ser');	         		
 		$this->meta_data = $this->_readFile($metafile, true);	
 		$this->get_md5_array();
@@ -80,16 +81,20 @@ class feedData {
     }      
     
       function news_feed_url() {
+	  
            list($server,$rest) = explode('?', $this->url());
            if(!$server) $server = DOKU_URL;
+		   
 		   $server = str_replace('doku.php',"",$server); 
-		   
-		   if(!preg_match("#/[^/]+/[^/]+#", $server)) {
-		       return $server;
+		   if(preg_match("#http://([^/]+)/([^/]+)/*$#", $server)) {			
+					return $server;
+			}
+			
+	     if(preg_match("#(?!:/)/([^/]+)/[^/]+/$#", $server)) {		      
+				return preg_replace("#/[^/]+/*$#", "/",$server);
 		   }
-		   
-   	       return preg_replace("#/[^/]+/*$", "/",$server);
-		   
+		   	 
+		    return $server;
 		  
         }
 	
