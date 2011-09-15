@@ -56,7 +56,7 @@ return <<<ITEM
       <link><![CDATA[$link]]></link>
       <description><![CDATA[$desc]]></description>
       <pubDate>$date</pubDate>
-      <guid isPermaLink ="false">$guid</guid>
+      <guid isPermaLink ="true">$guid</guid>
       <source url="$src_url"><![CDATA[$src_title]]></source>
  </item>      
 ITEM;
