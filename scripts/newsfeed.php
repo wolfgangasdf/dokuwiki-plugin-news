@@ -8,12 +8,17 @@ else {
   define("INC_DIR", "./inc"); 
  }
 
-
+ 
 require_once  INC_DIR . '/init.php';
 require_once DOKU_INC . "lib/plugins/news/scripts/rss.php";
 global $conf;
 global $newsChannelTitle;
 global $newsChannelDescription;	
+
+$refresh=false;
+if(isset($_POST) && isset($_POST['feed']) && $_POST['feed']=='refresh') {
+  $refresh = true;
+}
 
 $minute = 60;
 $default_ttl = 720*$minute;  
@@ -40,7 +45,7 @@ $xml_file = DOKU_INC . 'news_feed.xml';
 	}
 	
 	$time_elapsed = ($curent_time - $filetime);
-	if($time_elapsed >= $ttl || $lib_exe) {
+	if($time_elapsed >= $ttl || $lib_exe || $refresh) {
 		new externalNewsFeed($xml_file,$ttl/$minute);	
 	}
 	if(!$lib_exe) {
