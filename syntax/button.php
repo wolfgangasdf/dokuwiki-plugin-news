@@ -52,7 +52,7 @@
 	   global $USERINFO;
        if(!isset($USERINFO)) return false;
 	   
-       $action =  DOKU_URL . '/newsfeed.php';
+       $action =  DOKU_URL . 'newsfeed.php';
 
        $button="<form class='button' method='POST' action='$action '>";
        $button .= "<div class='no'><input type='hidden' name='feed' value='refresh' /><input type='submit' value='Feed Refresh' class='button' title='refresh' /></div></form>";     
