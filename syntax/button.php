@@ -50,12 +50,16 @@
         function handle($match, $state, $pos, &$handler){
 		
 	   global $USERINFO;
-       if(!isset($USERINFO)) return false;
+	   global $ID;
+	   global $INFO;
 	   
+      if(!isset($USERINFO)) return false;      
+	  if(isset($INFO['perm']) && $INFO['perm'] < 2) return; 
+	  
        $action =  DOKU_URL . 'newsfeed.php';
-
+       $button_name = $this->getLang('btn_generate');
        $button="<form class='button' method='POST' action='$action '>";
-       $button .= "<div class='no'><input type='hidden' name='feed' value='refresh' /><input type='submit' value='Feed Refresh' class='button' title='refresh' /></div></form>";     
+       $button .= "<div class='no'><input type='hidden' name='feed' value='refresh' /><input type='hidden' name='feed_ref' value='" . $ID. "' /><input type='submit' value='$button_name' class='button' title='refresh' /></div></form>";     
   
             switch ($state) {
             
@@ -71,9 +75,12 @@
          */
         function render($mode, &$renderer, $data) {
 		
-	   global $USERINFO;
-       if(!isset($USERINFO)) return false;
-
+	    global $USERINFO;
+	    global $INFO;
+	   
+        if(!isset($USERINFO)) return false;        
+        if(isset($INFO['perm']) && $INFO['perm'] < 2) return; 
+	   
             if($mode == 'xhtml'){
                 list($state, $button) = $data;
                 switch ($state) {				            
