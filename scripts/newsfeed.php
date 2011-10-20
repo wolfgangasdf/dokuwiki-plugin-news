@@ -48,9 +48,24 @@ $xml_file = DOKU_INC . 'news_feed.xml';
 	if($time_elapsed >= $ttl || $lib_exe || $refresh) {
 		new externalNewsFeed($xml_file,$ttl/$minute);	
 	}
-	if(!$lib_exe) {
+	if(!$lib_exe && ! $refresh) {
 	  readfile($xml_file);
 	  }
+	  
+	if($refresh) {
+			 if(@file_exists($xml_file)) {
+				$create_time= filectime($xml_file);
+				if($create_time >= $current_time) {
+				  echo '<span style="font-size: 11pt">';
+				   echo 'Feed generated: ' . date('r',$create_time) , '</span><br/>';
+				}
+				else echo "New Feed may not have been not created<br />";
+			}
+
+			$id = $_POST['feed_ref'];
+			$ret_url = DOKU_URL . 'doku.php?id=' . $id;
+   		    echo '<br /><a href ="' . $ret_url . '" style="font-size: 12pt;color:#8cacbb">Return to ' . $id . '</a>';
+	}
 
 
  exit;
