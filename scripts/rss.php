@@ -65,9 +65,15 @@ ITEM;
 
 
 	function write_header () {
-
+    global $lib_exe;
+    global $newsFeedURL;	
 	$date = $this->news_feed_date();
-	$link = $this->news_feed_url();
+	 if($lib_exe) {
+	     $link = $newsFeedURL;
+	 }
+	else {
+	    $link = $this->news_feed_url();
+		}
     $title = $this->channel_title();
 	$desc = $this->channel_description();
     $ttl = $this->ttl;
