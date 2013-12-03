@@ -56,7 +56,7 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
                   $this->helper->setSubFeed($_REQUEST['subfeed_dir']);
                   $this->pagedata = $this->helper->_readFile($this->helper->getMetaFN('pagedata','.ser'),true);   
            }
-            $this->output=$_REQUEST;
+           // $this->output=$_REQUEST;
 		   return;
 		 case 'generate':        
            $this->output=$this->generate($_REQUEST['subfeeds']);
@@ -85,7 +85,7 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
 			 $this->prev_deleted = implode(",", $prev_deleted);
 			 $this->is_prev_deleted = $prev_deleted;
 		  }
-         $this->output=$_REQUEST;
+        // $this->output=$_REQUEST;
     }
  
     /**
