@@ -153,7 +153,7 @@ SCRIPTTEXT;
         ptln("<tr>$theader</tr>");		
 	 }
 	 function table_footer() {
-	    ptln('</table');
+	    ptln('</table>');
 	 }
 	 
 	 function pagedata_row($md5,$info) {
