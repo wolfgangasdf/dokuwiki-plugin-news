@@ -20,8 +20,13 @@ global $newsChannelDescription;
 global $newsFeedURL;
 $newsFeedURL = "";
 $refresh=false;
+$title = "";
 if(isset($_POST) && isset($_POST['feed']) && $_POST['feed']=='refresh') {
   $refresh = true;
+  if(isset($_POST['title'])) {
+      $title = $_POST['title']; 
+      $xml_file = DOKU_INC . $title . '_news.xml';
+  }
 }
 
 $minute = 60;
@@ -29,7 +34,7 @@ $default_ttl = 720*$minute;
 $ttl = 0; 
 $filetime = 0;
 $curent_time = time();
-$xml_file = DOKU_INC . 'news_feed.xml';
+if(!$xml_file) $xml_file = DOKU_INC . 'news_feed.xml';
 
 	if(isset($conf['plugin']['news'])) {
 		if(isset($conf['plugin']['news']['ttl'])) {
@@ -54,7 +59,7 @@ $xml_file = DOKU_INC . 'news_feed.xml';
 	
 	$time_elapsed = ($curent_time - $filetime);
 	if($time_elapsed >= $ttl || $lib_exe || $refresh) {
-		new externalNewsFeed($xml_file,$ttl/$minute);	
+		new externalNewsFeed($xml_file,$ttl/$minute,$title);	
 		if($lib_exe) {
 		    chmod($xml_file, 0666);
 		}

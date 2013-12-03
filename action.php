@@ -28,8 +28,9 @@ class action_plugin_news extends DokuWiki_Action_Plugin {
      */
     function process_feed(&$event, $param) {
 	    global $ID;
+    
         if($this->helper->pageUpdated() ) {
-		    $metafile = metaFN('newsfeed:wasupdated', '.meta');
+            $metafile = $this->helper->getMetaFN('wasupdated','.meta') ;        		  
 			io_saveFile($metafile,time() . "\n" . $ID ."\n");
 			$this->helper->saveFeedData($ID); 
 		}

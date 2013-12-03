@@ -51,7 +51,17 @@
         
             $match=substr($match,11,-2);
 			if($match) {
-			   $match = trim($match);
+			   $match = trim($match);            
+               if(is_numeric($match)) {                
+                   $match = array($match);
+               }
+               else if(is_string($match)) {              
+                    $match = explode(';;',$match);
+                    if(count($match) == 1) {
+                       array_unshift($match,0);
+                    }
+               }
+              
 			}			
             switch ($state) {
             
@@ -73,10 +83,9 @@
                 switch ($state) {				            
 				  case DOKU_LEXER_SPECIAL : 				  
 				  $this->helper->setUpdate($match);
-				  $metafile = metaFN('newsfeed:timestamp', '.meta');
+                  $metafile = $this->helper->getMetaFN('timestamp','.meta') ;				
 				  io_saveFile($metafile,time());				 
-				  $renderer->doc .= ""; 
-				  
+				  $renderer->doc .= ""; 				  
 				  break;  ;
 				
                 }

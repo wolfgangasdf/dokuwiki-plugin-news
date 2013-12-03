@@ -41,7 +41,7 @@
 		function getSort(){ return 168; }
         
 		function connectTo($mode) {			
-		    $this->Lexer->addSpecialPattern('~~NEWS_REFRESH~~',$mode,'plugin_news_button');
+		    $this->Lexer->addSpecialPattern('~~NEWS_REFRESH.*?~~',$mode,'plugin_news_button');
 		}
      
         /**
@@ -55,11 +55,22 @@
 	   
       if(!isset($USERINFO)) return false;      
 	  if(isset($INFO['perm']) && $INFO['perm'] < 2) return; 
-	  
+	   $match=substr($match,15,-2);
+      // msg($match);
+       $match = trim($match);
+       if($match) {
+          $title = $match;
+       }
+       
        $action =  DOKU_URL . 'newsfeed.php';
        $button_name = $this->getLang('btn_generate');
        $button="<form class='button' method='POST' action='$action '>";
-       $button .= "<div class='no'><input type='hidden' name='feed' value='refresh' /><input type='hidden' name='feed_ref' value='" . $ID. "' /><input type='submit' value='$button_name' class='button' title='refresh' /></div></form>";     
+       $button .= "<div class='no'>";
+       //msg($match);
+       if($match) {
+           $button .= "<input type='hidden' name='title' value='$title' />";
+       }
+       $button .= "<input type='hidden' name='feed' value='refresh' /><input type='hidden' name='feed_ref' value='" . $ID. "' /><input type='submit' value='$button_name' class='button' title='refresh' /></div></form>";     
   
             switch ($state) {
             

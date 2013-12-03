@@ -10,17 +10,20 @@ class feedData {
 	var $currentDataArray;
 	var $currentMetaArray;	
 	var $newsFeedDate;
-	
-	function feedData() {
+	var $helper;
+	function feedData($subfeed) {
 		global $newsChannelTitle;
 		global $newsChannelDescription;	
-		//global $conf;
-		//print_r($conf);
-   		$metafile = metaFN('newsfeed:pagedata', '.ser');	         		
+
+        $this->helper = plugin_load('helper', 'news');
+         $this->helper->setSubFeed($subfeed) ;    
+
+        $metafile = $this->helper->getMetaFN('pagedata', '.ser');
 		$this->meta_data = $this->_readFile($metafile, true);	
 		$this->get_md5_array();
-
-		$metafile = metaFN('newsfeed:timestamp', '.meta');	         		
+              
+        $metafile = $this->helper->getMetaFN('timestamp','.meta') ;				        
+		// $metafile = metaFN('newsfeed:timestamp', '.meta');	         		
         $this->newsFeedDate	= $this->_readFile($metafile);
 			
 	}
@@ -28,8 +31,8 @@ class feedData {
 	function get_md5_array() {
 	     $this->feedDataBaseNames = array(); 
 		 $ar = array_keys($this->meta_data);
-	      foreach($ar as $md5) {
-		      $file= metaFN("newsfeed:$md5", '.gz');
+	      foreach($ar as $md5) {		     
+              $file = $this->helper->getMetaFN($md5, '.gz');               
 			  if(@file_exists($file)) {
 			     $this->feedDataBaseNames[] = $md5; 
 			  }
@@ -110,8 +113,8 @@ class feedData {
     function _dataFN() {
 		$md5 = array_shift($this->feedDataBaseNames);
 		if(!$md5) return false;
-		$this->currentMD5BaseName = $md5;		
-		return  metaFN("newsfeed:$md5", '.gz');	         		
+		$this->currentMD5BaseName = $md5;		                      
+		return  $this->helper->getMetaFN($md5, '.gz');	         		
    }
    
    function testDataElements() {   	

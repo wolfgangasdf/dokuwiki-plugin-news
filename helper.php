@@ -9,7 +9,7 @@ if(!defined('DOKU_META')) define('DOKU_META',DOKU_INC.'data/meta/newsfeed/');
 class helper_plugin_news extends Dokuwiki_Plugin {
     var $wasUpdated = false;
 	var $header;
-	
+	var $sub_feed = "";
     function getMethods(){
         $result = array();
 			
@@ -38,25 +38,38 @@ class helper_plugin_news extends Dokuwiki_Plugin {
 
     /***     
      */
-    function pageUpdated(){
+    function pageUpdated(){    
         return $this->wasUpdated;
     }
-    function setUpdate($header=0){	 
-		$this->header = $header;
+    function setUpdate($ar = null){	 
+        if(!$ar) return;
+        $this->header = $ar[0];
+        $this->sub_feed = trim($ar[1]);
         $this->wasUpdated = true;
     }
-
+   function setSubFeed($ns) {
+        $this->sub_feed = trim($ns);
+   }
+    function getMetaDirectory() {
+       return 'newsfeed:' .  $this->sub_feed . ':';
+    } 
+    function getMetaFN($file,$ext) {
+          $ns = $this->getMetaDirectory();         
+          $file = $ns . $file;
+          return metaFN($file, $ext);
+    }    
+    
 	function saveFeedData($id=null) {
 	   if(!$id) return;
-	   
+	
 	    if(!$this->header) {
 	        $md_5  = $this->_parse_items($id);	   
 		}
 		elseif($this->header) {
 		   $md_5  = $this->_parse_headers($id) ;
 		}
-		
-	    $metafile = metaFN('newsfeed:pagedata', '.ser');	         
+	   $metafile = $this->getMetaFN('pagedata', '.ser');
+	  
 	    $ar = $this->_readFile($metafile, true);
 		
 	    if(!$md_5) {
@@ -77,6 +90,7 @@ class helper_plugin_news extends Dokuwiki_Plugin {
 	    $result['gmtime'] = gmdate('r',$tm);		
 		$result['header'] = $this->header;		
 	    $ar[$md_5] = $result;
+     
 	    $this->_writeFile($metafile,$ar,true);
 		
 	}
@@ -105,7 +119,7 @@ class helper_plugin_news extends Dokuwiki_Plugin {
        }
 	   
 	   $md_5 = md5($id);	   
-	   $metafile = metaFN('newsfeed:' . $md_5, '.gz');	       
+       $metafile = $this->getMetaFN($md_5, '.gz'); 	   
 	   $this->_writeFile($metafile,$feed_data,true);
        return $md_5;
 	}
@@ -126,7 +140,7 @@ class helper_plugin_news extends Dokuwiki_Plugin {
 			$feed_data[$j]['name'] =  sectionID($ar[$i],$check);
 		}
         $md_5 = md5($id);
-	    $metafile = metaFN('newsfeed:' . $md_5, '.gz');	       
+        $metafile = $this->getMetaFN($md_5, '.gz'); 	
 	    $this->_writeFile($metafile,$feed_data,true); 
 		return $md_5;
     }	
