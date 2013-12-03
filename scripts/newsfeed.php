@@ -25,12 +25,13 @@ if(isset($_POST) && isset($_POST['feed']) && $_POST['feed']=='refresh') {
   $refresh = true;
   if(isset($_POST['title'])) {
       $title = $_POST['title']; 
-      $xml_file = DOKU_INC . $title . '_news.xml';
   }
 }
 else if($argc > 1) {
     $title = $argv[1]; 
-    $xml_file = DOKU_INC . $title . '_news.xml';
+}
+else if(isset($_GET) && isset($_GET['feed'])) {
+  $title = $_GET['feed'];
 }
 
 $minute = 60;
@@ -38,7 +39,12 @@ $default_ttl = 720*$minute;
 $ttl = 0; 
 $filetime = 0;
 $curent_time = time();
-if(!$xml_file) $xml_file = DOKU_INC . 'news_feed.xml';
+if($title) {
+   $xml_file = DOKU_INC . $title . '_news.xml';
+}   
+else {
+ $xml_file = DOKU_INC . 'news_feed.xml';
+ }
 
 	if(isset($conf['plugin']['news'])) {
 		if(isset($conf['plugin']['news']['ttl'])) {
