@@ -28,6 +28,10 @@ if(isset($_POST) && isset($_POST['feed']) && $_POST['feed']=='refresh') {
       $xml_file = DOKU_INC . $title . '_news.xml';
   }
 }
+else if($argc > 1) {
+    $title = $argv[1]; 
+    $xml_file = DOKU_INC . $title . '_news.xml';
+}
 
 $minute = 60;
 $default_ttl = 720*$minute;  

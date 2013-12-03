@@ -94,57 +94,14 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
     function html() {
     
 $request_subfeeds = $_REQUEST['subfeeds']	;
-echo <<<SCRIPTTEXT
-  <style type="text/css">
-   td.right { padding-right: 20px; }
- </style>
-  
-  <script type='text/javascript'>
-  //<![CDATA[
-  
-  function newshandler() {
- 
-      var prev_del = document.getElementById("prev_del");
-      var inputs = document.getElementsByTagName("input");
-	  var prev = "";
-	 
-	  
-	  for(var i=0; i<inputs.length;i++) {
-	   if(inputs[i].type == 'checkbox') {	 
-              if(inputs[i].checked  && inputs[i].name.match(/delete/))  {	
-			      prev += inputs[i].value + ",";
-				 }
-		 }		
-	  }	  
-	 
-	  if(prev_del.value && prev) {
-	     prev_del.value += "," + prev;
-	  }
-	  else if (prev) prev_del.value = prev;
-	  prev_del.value = prev_del.value.replace(/\s*,$/,"");
-	  document.news_data.subfeed_dir.value="$request_subfeeds";
-	 //alert("$request_subfeeds");
-  }
-  function confirm_del() {
-       
-      if(window.confirm("The deleted feeds will be removed from the current news feed.")) return true;
-	  return false;
-  }
-  function subfeedshandler() {
-     var selected = document.news_data.subfeeds;
-     var index = selected.selectedIndex;     
-     document.news_data.subfeed_inx.value = index;
-  }
-  //]]>
-  </script>
-SCRIPTTEXT;
 
-      ptln('<div style="width:90%;margin:auto;"><p>' . $this->getLang('instructions') . '</p></div>');     
+
+      ptln('<div style="width:90%;margin:auto;display:none;"  class="news_info"><p>' . $this->getLang('instructions') . '</p></div>');     
       ptln('<form action="'.wl($ID).'" method="post" name="news_data" onsubmit="newshandler(this);">');          
       ptln('  <input type="hidden" name="do"   value="admin" />');
       ptln('  <input type="hidden" name="page" value="'.$this->getPluginName().'" />');
 	  ptln('  <input type="hidden" name="prev_del" id ="prev_del" value="' .$this->prev_deleted. '" />');
-   	  //ptln('  <input type="hidden" name="subfeed_inx" id ="subfeed_inx" value="' .$this->feedinx. '" />');
+   	  
       ptln('  <input type="hidden" name="subfeed_inx" id ="subfeed_inx" value="0" />');
       ptln('  <input type="hidden" name="subfeed_dir" id ="subfeed_dir" value="" />');
       formSecurityToken();
@@ -153,11 +110,11 @@ SCRIPTTEXT;
       ptln('  <input type="submit" name="cmd[restore]"  value="'.$this->getLang('btn_restore').'" />');
 	  ptln('  <input type="submit" name="cmd[confirm]" onclick="return confirm_del();" value="'.$this->getLang('btn_confirm').'" />');
 	  ptln('  <input type="submit" name="cmd[generate]" value="'.$this->getLang('btn_generate').'" />');	
-      ptln('  <select  id="subfeeds" name="subfeeds" onchange="subfeedshandler()" ><option value="NotSet">Select Sub Feed</option>'); 
+      ptln('  <select  id="subfeeds" name="subfeeds" onchange="subfeedshandler()" ><option value="NotSet">' . $this->getLang('select_feed') .'</option>'); 
       $this->subfeed_options();      
       ptln('</select>');  
-      ptln('  <input type="submit" id = "subfeedbtn" name="cmd[subfeed]" value="Confirm subfeed" />');	
-  
+      ptln('  <input type="submit" id = "subfeedbtn" name="cmd[subfeed]" value="'.$this->getLang('btn_confirmfeed').'" />');	
+      ptln('  <input type="button" id = "news_infobtn" value="'.$this->getLang('btn_info').'" />');	
 	  ptln('<div id="pagedata_news"><br />');
 	  $this->table_header();	 		
 			foreach($this->pagedata as $md5=>$pageinfo) {
