@@ -117,7 +117,7 @@
            else  if($INFO['isadmin']  || $INFO['ismanager'] ) {                  
                    return true;
             }
-            else if(in_array(trim($news_mgr),$USERINFO['grps'])) {
+           if(in_array(trim($news_mgr),$USERINFO['grps']) && !$admins_only) {
                     return true;
             }
       
