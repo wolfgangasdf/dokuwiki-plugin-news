@@ -18,7 +18,7 @@
      */
     class syntax_plugin_news_feed extends DokuWiki_Syntax_Plugin {
         var $helper;  
-		
+		var $is_news_mgr;
 	    function syntax_plugin_news_feed() {
 		   $this->helper =& plugin_load('helper', 'news');
 		}		
@@ -79,7 +79,13 @@
 		if (empty($data)) return false;
 		    global $ID;
             if($mode == 'xhtml'){
+                if(!$this->is_manager()) {
+                     $this->helper->set_permission(2); 
+                     return false;
+               }
+               $this->helper->set_permission(3);
                 list($state, $match) = $data;
+               
                 switch ($state) {				            
 				  case DOKU_LEXER_SPECIAL : 				  
 				  $this->helper->setUpdate($match);
@@ -95,5 +101,30 @@
         }
      
 
+      function is_manager(& $mgr) {
+            global $INFO,$USERINFO;
 
+            if(!isset($USERINFO)) return false;
+            if(!$this->getConf('chkperm')) return true;  //by-pass news permission checks
+            
+            $is_news_mgr = false;
+            $news_mgr = $this->getConf('mgr');
+            $admins_only =  $this->getConf('adminsonly');
+
+            if(!$news_mgr && !$admins_only) {                 
+                   return true;
+            }
+           else  if($INFO['isadmin']  || $INFO['ismanager'] ) {                  
+                   return true;
+            }
+            else if(in_array(trim($news_mgr),$USERINFO['grps'])) {
+                    return true;
+            }
+      
+
+            return false;
+
+
+
+      }
 }

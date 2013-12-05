@@ -20,7 +20,7 @@ $lang['menu'] = 'News plugin administration';
 $lang['btn_info'] = 'Show/Hide Help';
 $lang['btn_confirmfeed'] = 'Confirm Subfeed';
 $lang['select_feed'] = 'Select  Subfeed';
-
+$lang['no_permission'] = 'You do not have permission to create or update news feeds.';
 $lang['instructions'] ='<p><h3>Help</h3>To delete a feed, check the "Delete" checkbox beside the feed name.  Then click 
 the "Delete Selections" button at the top of the screen.  You can delete multiple feeds in a single delete operation
 by checking more than one checkbox.  The table listing the feeds will be updated to reflect the

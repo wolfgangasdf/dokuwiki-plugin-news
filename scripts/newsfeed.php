@@ -21,6 +21,7 @@ global $newsFeedURL;
 $newsFeedURL = "";
 $refresh=false;
 $title = "";
+$test = "";
 if(isset($_POST) && isset($_POST['feed']) && $_POST['feed']=='refresh') {
   $refresh = true;
   if(isset($_POST['title'])) {
@@ -33,7 +34,12 @@ else if($argc > 1) {
 else if(isset($_GET) && isset($_GET['feed'])) {
   $title = $_GET['feed'];
 }
-
+if(isset($_POST)  || isset($_GET) ) {
+  if(isset($_REQUEST['test']) && !is_writable(DOKU_INC) ) {
+     echo  DOKU_INC . " is not writable by the web server.<br />Please check your permissions.";
+     return;
+  }  
+}
 $minute = 60;
 $default_ttl = 720*$minute;  
 $ttl = 0; 
