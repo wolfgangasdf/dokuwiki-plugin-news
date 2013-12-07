@@ -92,9 +92,6 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
      * output appropriate html
      */
     function html() {
-    
-$request_subfeeds = $_REQUEST['subfeeds']	;
-
 
       ptln('<div style="width:90%;margin:auto;display:none;"  class="news_info"><p>' . $this->getLang('instructions') . '</p></div>');     
       ptln('<form action="'.wl($ID).'" method="post" name="news_data" onsubmit="newshandler(this);">');          
@@ -235,18 +232,23 @@ $request_subfeeds = $_REQUEST['subfeeds']	;
 	 }
 	 
 	 function generate($subfeed) {	
-      
-         if($subfeed == 'NotSet') {
-            $subfeed = "";
-            $description = $this->getConf('desc');
+		global $newsChannelTitle;
+        global $newsChannelDescription;	
+        $newsfeed_ini = DOKU_INC . 'lib/plugins/news/scripts/newsfeed.ini';
+         
+         if(file_exists($newsfeed_ini)) {
+            $ini_array = parse_ini_file($newsfeed_ini, true);   
+            $which = isset($ini_array[$subfeed]) ? $subfeed : 'default';
+            $newsChannelTitle = $ini_array[$which]['title'];
+            $newsChannelDescription = $ini_array[$which]['description'] ;         
         }
-        else $description = "News Feed for $subfeed"; 
-        
+        else {
+            $subfeed = "";
+            $newsChannelDescription = $this->getConf('desc');
+            $newsChannelTitle=$this->getConf('title');
+        }
+    
 		    $create_time = 0;
-			global $newsChannelTitle;
-            global $newsChannelDescription;	
-			$newsChannelTitle=$this->getConf('title');
-			$newsChannelDescription= $description;
 			$ttl = $this->getConf('ttl');
             if($subfeed) {
                 $xml_file = DOKU_INC . $subfeed . '_news.xml';
