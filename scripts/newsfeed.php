@@ -3,9 +3,6 @@ global $lib_exe;
 $lib_exe = false;
 if(strpos(dirname(__FILE__), 'lib/exe')) {
    define("INC_DIR", "../../inc");   
-   if(!isset($_SERVER['DOCUMENT_ROOT']) || (isset($_SERVER['DOCUMENT_ROOT']) && ! $_SERVER['DOCUMENT_ROOT'])) {
-      define("DOKU_URL", 'http://myexample.com/');
-   }
    $lib_exe = true;
 }
 else {
@@ -13,7 +10,8 @@ else {
  }
 
 require_once  INC_DIR . '/init.php';
-require_once DOKU_INC . "lib/plugins/news/scripts/rss.php";
+require_once DOKU_INC . 'lib/plugins/news/scripts/rss.php';
+$newsfeed_ini = DOKU_INC . 'lib/plugins/news/scripts/newsfeed.ini';
 global $conf;
 global $newsChannelTitle;
 global $newsChannelDescription;	
@@ -22,6 +20,7 @@ $newsFeedURL = "";
 $refresh=false;
 $title = "";
 $test = "";
+
 if(isset($_POST) && isset($_POST['feed']) && $_POST['feed']=='refresh') {
   $refresh = true;
   if(isset($_POST['title'])) {
@@ -51,16 +50,22 @@ if($title) {
 else {
  $xml_file = DOKU_INC . 'news_feed.xml';
  }
+ if(file_exists($newsfeed_ini)) {
+    $ini_array = parse_ini_file($newsfeed_ini, true);   
+    $which = isset($ini_array[$title]) ? $title : 'default';
+    $newsChannelTitle = $ini_array[$which]['title'];
+    $newsChannelDescription = $ini_array[$which]['description'] ;
+}
 
 	if(isset($conf['plugin']['news'])) {
 		if(isset($conf['plugin']['news']['ttl'])) {
 			$ttl = $conf['plugin']['news']['ttl'];
 			if($ttl) $ttl *= $minute;
 		}
-		if(isset($conf['plugin']['news']['title'])) {
+		if(!$newsChannelTitle && isset($conf['plugin']['news']['title'])) {
 			$newsChannelTitle = $conf['plugin']['news']['title'];
 		}
-		if(isset($conf['plugin']['news']['desc'])) {
+		if(!$newsChannelDescription && isset($conf['plugin']['news']['desc'])) {
 			$newsChannelDescription = $conf['plugin']['news']['desc'];
 		}
 	 	if(isset($conf['plugin']['news']['url'])) {
