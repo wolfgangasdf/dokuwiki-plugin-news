@@ -79,16 +79,16 @@ Configuration Options:
 ---------------------
 
 
-If you have a version of the news plugin which supports multiple feeds, then you must include a unique
-feed name in your  ~~NEWSFEED~~ syntax
+If you have a version of the news plugin which supports multiple feeds, then you must include a unique feed name in your  ~~NEWSFEED~~ syntax:
+
 		~~NEWSFEED:<n>;;<feed_name>~~.
 		~~NEWSFEED:<feed_name>~~
- The Refresh button will also require the feed name:
+
+The Refresh button will also require the feed name:
      ~~NEWS_REFRESH:<feed_name>~~ 
 The header values for these feeds are configured in the file scripts/newsfeed.ini.
  
-You can still use the original syntax, without the feed name; its header title and description will be taken from the default
-entry in newsfeed.ini or, lacking that, from the options set in the Dokuwiki configuration manager.
+You can still use the original syntax, without the feed name; its header title and description will be taken from the default entry in newsfeed.ini or, lacking that, from the options set in the Dokuwiki configuration manager.
 
 
 
