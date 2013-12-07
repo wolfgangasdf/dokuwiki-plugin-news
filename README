@@ -58,7 +58,11 @@ The main file for generating news feeds is newsfeed.php, which  is found in news
 2. place newsfeed.php in lib/exe and generate the feed from the command line:
             php newsfeed.php
 			
-3.  open the news admin panel and click on the generate button.			
+3.  open the news admin panel and click on the generate button.		
+
+4. Create a Refresh button:
+     ~~NOCACHE~~ 
+     ~~NEWS_REFRESH~~
 			
 If you use method  2 or 3 and do not implement method 1,  then your url must be:
            http:/my_web_site.org/my_dokuwiki/news_feed.xml
@@ -71,9 +75,20 @@ Configuration Options:
 2. title: Feed Title
 3. desc: Feed Description.
 
+2 and 3 configure the header section, where the Title is what is feed is known as the the description is a form of subtitle describing the feed further.
 ---------------------
 
 
+If you have a version of the news plugin which supports multiple feeds, then you must include a unique
+feed name in your  ~~NEWSFEED~~ syntax
+		~~NEWSFEED:<n>;;<feed_name>~~.
+		~~NEWSFEED:<feed_name>~~
+ The Refresh button will also require the feed name:
+     ~~NEWS_REFRESH:<feed_name>~~ 
+The header values for these feeds are configured in the file scripts/newsfeed.ini.
+ 
+You can still use the original syntax, without the feed name; its header title and description will be taken from the default
+entry in newsfeed.ini or, lacking that, from the options set in the Dokuwiki configuration manager.
 
 
 
