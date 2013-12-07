@@ -18,8 +18,7 @@
 	  }
 	  else if (prev) prev_del.value = prev;
 	  prev_del.value = prev_del.value.replace(/\s*,$/,"");
-	  document.news_data.subfeed_dir.value="$request_subfeeds";
-	 
+	  document.news_data.subfeed_dir.value=document.news_data.subfeeds.value;	
   }
   
   function confirm_del() {       
