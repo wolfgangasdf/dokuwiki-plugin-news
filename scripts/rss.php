@@ -75,8 +75,7 @@ ITEM;
 	    $link = $this->news_feed_url();
 		}
     $title = $this->channel_title();
-	$desc = $this->channel_description();
-    $ttl = $this->ttl;
+	$desc = $this->channel_description();    
 return <<<HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
@@ -85,8 +84,7 @@ return <<<HEAD
 	<link>$link</link>
 	<description>$desc</description>
 	<language>en-us</language>
-	<pubDate>$date</pubDate>
-	<ttl>$ttl</ttl>
+	<pubDate>$date</pubDate>	
 HEAD;
 
 	}
