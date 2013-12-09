@@ -52,6 +52,7 @@ function externalNewsFeed($outfile=null,$ttl=720, $subfeed = "") {
   
 return <<<ITEM
 <item>
+
       <title><![CDATA[$title]]></title>
       <link><![CDATA[$link]]></link>
       <description><![CDATA[$desc]]></description>
