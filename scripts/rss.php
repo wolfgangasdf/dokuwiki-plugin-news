@@ -51,6 +51,7 @@ function externalNewsFeed($outfile=null,$ttl=720, $subfeed = "") {
 		$desc = $this->description();
   
 return <<<ITEM
+
 <item>
 
       <title><![CDATA[$title]]></title>

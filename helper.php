@@ -10,6 +10,7 @@ class helper_plugin_news extends Dokuwiki_Plugin {
     var $wasUpdated = false;
 	var $header;
 	var $sub_feed = "";
+    var $has_permission = -1;
     function getMethods(){
         $result = array();
 			
@@ -38,6 +39,13 @@ class helper_plugin_news extends Dokuwiki_Plugin {
 
     /***     
      */
+    function set_permission($perm) {
+        $this->has_permission = $perm;
+    }
+    function has_permission() {
+        return $this->has_permission;
+    }
+    
     function pageUpdated(){    
         return $this->wasUpdated;
     }
@@ -46,6 +54,7 @@ class helper_plugin_news extends Dokuwiki_Plugin {
         $this->header = $ar[0];
         $this->sub_feed = trim($ar[1]);
         $this->wasUpdated = true;
+        
     }
    function setSubFeed($ns) {
         $this->sub_feed = trim($ns);
