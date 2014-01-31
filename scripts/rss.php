@@ -86,7 +86,7 @@ return <<<HEAD
 	<link>$link</link>
 	<description>$desc</description>
 	<language>en-us</language>
-	<pubDate>$date</pubDate>	
+	<pubDate>$date</pubDate>
 HEAD;
 
 	}
