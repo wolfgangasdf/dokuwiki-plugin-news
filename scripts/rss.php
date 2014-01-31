@@ -6,9 +6,9 @@ require_once DOKU_INC . "lib/plugins/news/scripts/feedData.php";
 
 class externalNewsFeed extends feedData {
 var $ttl;
-function externalNewsFeed($outfile=null,$ttl=720) {
+function externalNewsFeed($outfile=null,$ttl=720, $subfeed = "") {
     $this->ttl = $ttl;
-    parent::feedData();
+    parent::feedData($subfeed);
 	$handle = null;
 	
 		if($outfile) {
@@ -51,6 +51,7 @@ function externalNewsFeed($outfile=null,$ttl=720) {
 		$desc = $this->description();
   
 return <<<ITEM
+
 <item>
 
       <title><![CDATA[$title]]></title>

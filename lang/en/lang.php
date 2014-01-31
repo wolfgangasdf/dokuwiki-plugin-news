@@ -17,9 +17,11 @@ $lang['btn_confirm'] = 'Confirm Deletions';
 $lang['invalid'] = 'invalid input detected!';
 $lang['btn_generate'] = 'Generate Feed';
 $lang['menu'] = 'News plugin administration';
-
-
-$lang['instructions'] ='<p>To delete a feed, check the "Delete" checkbox beside the feed name.  Then click 
+$lang['btn_info'] = 'Show/Hide Help';
+$lang['btn_confirmfeed'] = 'Confirm Subfeed';
+$lang['select_feed'] = 'Select  Subfeed';
+$lang['no_permission'] = 'You do not have permission to create or update news feeds.';
+$lang['instructions'] ='<p><h3>Help</h3>To delete a feed, check the "Delete" checkbox beside the feed name.  Then click 
 the "Delete Selections" button at the top of the screen.  You can delete multiple feeds in a single delete operation
 by checking more than one checkbox.  The table listing the feeds will be updated to reflect the
 deletions but deletions will not be final until you click the "Confirm Deletions" button, at which point the database
@@ -29,5 +31,8 @@ A deletion only affects the current state of the database.  You must also remove
 generated the feed.  If the plugin syntax remains on a page, the feed from that page will be regenerated the
 next time the Dokuwiki cache is updated.  
 </p>    
- 
+<p>
+If your site allows more than one feed, they are referred to here as "subfeeds".  If you want to modify and/or generate a subfeed, select the subfeed by its
+title from the "Select Subfeed" drop-down menu and then click the "Confirm Subfeed" button.  Then proceed as described above.
+</p> 
 ';

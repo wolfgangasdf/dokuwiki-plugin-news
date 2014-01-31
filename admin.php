@@ -19,11 +19,16 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
 	var $pagedata;
 	var $prev_deleted = "";
     var $is_prev_deleted = array();
-	
-	
+	var $subfeed_selected = 0;
+	var $subfeed_name = "";
+    
   	function admin_plugin_news() {
-		   $this->helper =& plugin_load('helper', 'news');	          		   
-		   $this->pagedata = $this->helper->_readFile(metaFN('newsfeed:pagedata', '.ser'),true);    
+		   $this->helper =& plugin_load('helper', 'news');
+           if($_REQUEST['subfeeds'] != 'NotSet') {
+               $this->helper->setSubFeed($_REQUEST['subfeeds']);
+           }           		  
+           $this->pagedata = $this->helper->_readFile($this->helper->getMetaFN('pagedata','.ser'),true);    
+        
 	}		
     /**
      * handle user request
@@ -47,14 +52,24 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
         case 'restore' :  		
 		   $this->is_prev_deleted =array();
 		   $this->prev_deleted = "";
+           if(isset($_REQUEST[subfeed_dir])) {
+                  $this->helper->setSubFeed($_REQUEST['subfeed_dir']);
+                  $this->pagedata = $this->helper->_readFile($this->helper->getMetaFN('pagedata','.ser'),true);   
+           }
+           // $this->output=$_REQUEST;
 		   return;
-		 case 'generate':
-           $this->output=$this->generate();
+		 case 'generate':        
+           $this->output=$this->generate($_REQUEST['subfeeds']);
 		   return;
+         case 'subfeed':
+           $this->subfeed_selected = $_REQUEST['subfeed_inx'];
+           if($this->subfeed_selected  > 0) {
+              $this->subfeed_name= $_REQUEST['subfeeds'];
+           }
+           break;          
            		   
-		 
       }   
-	  
+	     
           $deleted = array();
 		  if(isset($_REQUEST['delete']) && $_REQUEST['delete']) {
 			$deletes = $_REQUEST['delete'];		  
@@ -70,65 +85,33 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
 			 $this->prev_deleted = implode(",", $prev_deleted);
 			 $this->is_prev_deleted = $prev_deleted;
 		  }
-         // $this->output=$this->pagedata;
+        // $this->output=$_REQUEST;
     }
  
     /**
      * output appropriate html
      */
     function html() {
-	
-echo <<<SCRIPTTEXT
-  <style type="text/css">
-   td.right { padding-right: 20px; }
- </style>
 
-  <script type='text/javascript'>
-  //<![CDATA[
-  
-  function newshandler() {
- 
-      var prev_del = document.getElementById('prev_del');
-      var inputs = document.getElementsByTagName('input');
-	  var prev = "";
-	  // var teststr = prev_del.value;
-	  
-	  for(var i=0; i<inputs.length;i++) {
-	   if(inputs[i].type == 'checkbox') {	 
-              if(inputs[i].checked  && inputs[i].name.match(/delete/))  {	
-			      prev += inputs[i].value + ',';
-				 }
-		 }		
-	  }	  
-	 
-	  if(prev_del.value && prev) {
-	     prev_del.value += ',' + prev;
-	  }
-	  else if (prev) prev_del.value = prev;
-	  prev_del.value = prev_del.value.replace(/\s*,$/,"");
-	  
-	  
-  }
-  function confirm_del() {
-       
-      if(window.confirm('The deleted feeds will be removed from the current news feed.')) return true;
-	  return false;
-  }
-  //]]>
-  </script>
-SCRIPTTEXT;
-
-      ptln('<div style="width:90%;margin:auto;"><p>' . $this->getLang('instructions') . '</p></div>');     
+      ptln('<div style="width:90%;margin:auto;display:none;"  class="news_info"><p>' . $this->getLang('instructions') . '</p></div>');     
       ptln('<form action="'.wl($ID).'" method="post" name="news_data" onsubmit="newshandler(this);">');          
       ptln('  <input type="hidden" name="do"   value="admin" />');
       ptln('  <input type="hidden" name="page" value="'.$this->getPluginName().'" />');
 	  ptln('  <input type="hidden" name="prev_del" id ="prev_del" value="' .$this->prev_deleted. '" />');
+   	  
+      ptln('  <input type="hidden" name="subfeed_inx" id ="subfeed_inx" value="0" />');
+      ptln('  <input type="hidden" name="subfeed_dir" id ="subfeed_dir" value="" />');
       formSecurityToken();
 
       ptln('  <input type="submit" name="cmd[prune]"  value="'.$this->getLang('btn_prune').'" />');
       ptln('  <input type="submit" name="cmd[restore]"  value="'.$this->getLang('btn_restore').'" />');
 	  ptln('  <input type="submit" name="cmd[confirm]" onclick="return confirm_del();" value="'.$this->getLang('btn_confirm').'" />');
-	  ptln('  <input type="submit" name="cmd[generate]" value="'.$this->getLang('btn_generate').'" />');	  
+	  ptln('  <input type="submit" name="cmd[generate]" value="'.$this->getLang('btn_generate').'" />');	
+      ptln('  <select  id="subfeeds" name="subfeeds" onchange="subfeedshandler()" ><option value="NotSet">' . $this->getLang('select_feed') .'</option>'); 
+      $this->subfeed_options();      
+      ptln('</select>');  
+      ptln('  <input type="submit" id = "subfeedbtn" name="cmd[subfeed]" value="'.$this->getLang('btn_confirmfeed').'" />');	
+      ptln('  <input type="button" id = "news_infobtn" value="'.$this->getLang('btn_info').'" />');	
 	  ptln('<div id="pagedata_news"><br />');
 	  $this->table_header();	 		
 			foreach($this->pagedata as $md5=>$pageinfo) {
@@ -142,6 +125,7 @@ SCRIPTTEXT;
 	  if($this->output) {
 		  ptln('<p><pre>');	  
 		  echo print_r($this->output,true);
+          echo  $this->subfeed_name;
 		  ptln('</pre></p>');	  	  
      }
 	 }
@@ -180,7 +164,35 @@ SCRIPTTEXT;
 	
 	    return "<th align='center'>$name</th>";  
 	 }
-	 
+     
+	 function subfeed_options() {
+         $dir = DOKU_INC . 'data/meta/newsfeed/';  
+       
+          if($this->subfeed_selected == 0 && isset($_REQUEST['subfeed_dir'])) {
+              $sbname_check = $_REQUEST['subfeed_dir'];
+          } 
+         else  $sbname_check = 'NotSet';   
+       
+         $index = 1;
+         if ($dh = opendir($dir)) {
+            while (($file = readdir($dh)) !== false) {
+              if($file == '.' || $file == '..') continue;              
+              if(is_dir($dir . $file)) {  
+                 if($this->subfeed_selected == $index || $file == $sbname_check) {
+                     ptln("<option value='$file' selected>$file</option>"); 
+                 }
+                 else {
+                     ptln("<option value='$file' >$file</option>"); 
+                    }
+                $index++;    
+             }
+         }
+       
+        }
+          closedir($dh);         
+   
+     }
+     
 	 function prune() {
 	     
 		  
@@ -196,31 +208,56 @@ SCRIPTTEXT;
 	 function confirm() {
 
 		 $deleted = explode(',',$_REQUEST['prev_del']);
+         if(isset($_REQUEST['subfeed_dir']) && $_REQUEST['subfeed_dir'] != 'NotSet') {
+               $this->helper->setSubFeed($_REQUEST['subfeed_dir']);
+               $meta_dir =$this->helper->getMetaDirectory();
+           }
+           else $meta_dir = "newsfeed:";
+
+   
+  
 		  foreach($deleted as $d) {
 			  unset($this->pagedata[$d]);
 		  }
-          $this->helper->_writeFile(metaFN('newsfeed:pagedata', '.ser'),$this->pagedata,true);      
+          $pfile =$this->helper->getMetaFN('pagedata', '.ser');
+          $this->helper->_writeFile($pfile,$this->pagedata,true);      
 		  
   		  foreach($deleted as $d) {
-		     $file = metaFN("newsfeed:$d", '.gz');
-			 if(file_exists($file)) {
-			    @unlink($file);			   
+		     $file = metaFN($meta_dir . $d, '.gz');
+			 if(file_exists($file)) {           
+			   @unlink($file);			   
 			 }
 		  }
         	  
 	 }
 	 
-	 function generate() {	  
+	 function generate($subfeed) {	
+		global $newsChannelTitle;
+        global $newsChannelDescription;	
+        $newsfeed_ini = DOKU_INC . 'lib/plugins/news/scripts/newsfeed.ini';
+         
+         if(file_exists($newsfeed_ini)) {
+            $ini_array = parse_ini_file($newsfeed_ini, true);   
+            $which = isset($ini_array[$subfeed]) ? $subfeed : 'default';
+            $newsChannelTitle = $ini_array[$which]['title'];
+            $newsChannelDescription = $ini_array[$which]['description'] ;         
+        }
+        else {
+            $subfeed = "";
+            $newsChannelDescription = $this->getConf('desc');
+            $newsChannelTitle=$this->getConf('title');
+        }
+    
 		    $create_time = 0;
-			global $newsChannelTitle;
-            global $newsChannelDescription;	
-			$newsChannelTitle=$this->getConf('title');
-			$newsChannelDescription=$this->getConf('desc');
 			$ttl = $this->getConf('ttl');
-	        $xml_file = DOKU_INC . 'news_feed.xml';
+            if($subfeed) {
+                $xml_file = DOKU_INC . $subfeed . '_news.xml';
+            }
+	        else $xml_file = DOKU_INC . 'news_feed.xml';
+            
             $current_time = time();
 			
-	 		new externalNewsFeed($xml_file,$ttl);	
+	 		new externalNewsFeed($xml_file,$ttl,$subfeed);	
 
 			if(@file_exists($xml_file)) {
 			     $create_time= filectime($xml_file);	             

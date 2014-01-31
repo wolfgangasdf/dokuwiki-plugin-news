@@ -18,7 +18,7 @@
      */
     class syntax_plugin_news_feed extends DokuWiki_Syntax_Plugin {
         var $helper;  
-		
+		var $is_news_mgr;
 	    function syntax_plugin_news_feed() {
 		   $this->helper =& plugin_load('helper', 'news');
 		}		
@@ -51,7 +51,17 @@
         
             $match=substr($match,11,-2);
 			if($match) {
-			   $match = trim($match);
+			   $match = trim($match);            
+               if(is_numeric($match)) {                
+                   $match = array($match);
+               }
+               else if(is_string($match)) {              
+                    $match = explode(';;',$match);
+                    if(count($match) == 1) {
+                       array_unshift($match,0);
+                    }
+               }
+              
 			}			
             switch ($state) {
             
@@ -69,14 +79,19 @@
 		if (empty($data)) return false;
 		    global $ID;
             if($mode == 'xhtml'){
+                if(!$this->is_manager()) {
+                     $this->helper->set_permission(2); 
+                     return false;
+               }
+               $this->helper->set_permission(3);
                 list($state, $match) = $data;
+               
                 switch ($state) {				            
 				  case DOKU_LEXER_SPECIAL : 				  
 				  $this->helper->setUpdate($match);
-				  $metafile = metaFN('newsfeed:timestamp', '.meta');
+                  $metafile = $this->helper->getMetaFN('timestamp','.meta') ;				
 				  io_saveFile($metafile,time());				 
-				  $renderer->doc .= ""; 
-				  
+				  $renderer->doc .= ""; 				  
 				  break;  ;
 				
                 }
@@ -86,5 +101,30 @@
         }
      
 
+      function is_manager(& $mgr) {
+            global $INFO,$USERINFO;
 
+            if(!isset($USERINFO)) return false;
+            if(!$this->getConf('chkperm')) return true;  //by-pass news permission checks
+            
+            $is_news_mgr = false;
+            $news_mgr = $this->getConf('mgr');
+            $admins_only =  $this->getConf('adminsonly');
+
+            if(!$news_mgr && !$admins_only) {                 
+                   return true;
+            }
+           else  if($INFO['isadmin']  || $INFO['ismanager'] ) {                  
+                   return true;
+            }
+           if(in_array(trim($news_mgr),$USERINFO['grps']) && !$admins_only) {
+                    return true;
+            }
+      
+
+            return false;
+
+
+
+      }
 }
