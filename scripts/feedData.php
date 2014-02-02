@@ -23,7 +23,7 @@ class feedData {
 		$this->get_md5_array();
               
         $metafile = $this->helper->getMetaFN('timestamp','.meta') ;				        
-		// $metafile = metaFN('newsfeed:timestamp', '.meta');	         		
+		
         $this->newsFeedDate	= $this->_readFile($metafile);
 			
 	}
@@ -79,7 +79,15 @@ class feedData {
 	}
 	
     function date($which='gm') {
-		if($which == 'gm') return $this->currentMetaArray['gmtime'];
+		if($which == 'gm') {
+            if($this->helper->getConf('createtime') && isset($this->currentMetaArray['create_time'])) {           
+                 return $this->currentMetaArray['create_time'];
+            }            
+              else {
+                 return $this->currentMetaArray['gmtime'];
+              }
+        }    
+            
 		return date('r',$this->timestamp());
     }      
     

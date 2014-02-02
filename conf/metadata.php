@@ -6,3 +6,5 @@ $meta['url'] = array('string');
 $meta['mgr'] = array('string');
 $meta['adminsonly'] = array('onoff');
 $meta['chkperm'] = array('onoff');
+$meta['createtime'] = array('onoff');
+

@@ -97,6 +97,10 @@ class helper_plugin_news extends Dokuwiki_Plugin {
 	    $result['url'] = DOKU_URL . 'doku.php?id=' . $id;
 	    $result['time'] = $tm;
 	    $result['gmtime'] = gmdate('r',$tm);		
+        if(empty($ar[$md_5]['create_time'])) { 
+           $result['create_time'] = gmdate('r',$tm);		        
+        }
+        else $result['create_time'] = $ar[$md_5]['create_time'];		        
 		$result['header'] = $this->header;		
 	    $ar[$md_5] = $result;
      
@@ -135,7 +139,7 @@ class helper_plugin_news extends Dokuwiki_Plugin {
 	
 	function _parse_headers($id) {
 		$data = file_get_contents(wikiFN($id));	
-        //$data = preg_replace("#^\s*~~NEWSFEED.*?~~\s+#","",$data);		
+        
     	$segs = $this->header;
 		$ar = preg_split("/(={" . $segs  . ",}.*?={" . $segs . ",})\s*\n/",$data, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
         if(count($ar) == 0) return false;				
