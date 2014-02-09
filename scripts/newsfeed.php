@@ -86,10 +86,12 @@ else {
 		}
 	}
 	if(!$lib_exe && ! $refresh) {
+      header('Content-type: application/xml');
 	  readfile($xml_file);
 	  }
 	  
 	if($refresh) {
+            header('Content-type: text/html');
 			if(@file_exists($xml_file)) {
 				$create_time= filectime($xml_file);
 				if($create_time >= $current_time) {
