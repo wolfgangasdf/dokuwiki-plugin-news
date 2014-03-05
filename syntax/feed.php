@@ -101,7 +101,7 @@
         }
      
 
-      function is_manager(& $mgr) {
+      function is_manager() {
             global $INFO,$USERINFO;
 
             if(!isset($USERINFO)) return false;
