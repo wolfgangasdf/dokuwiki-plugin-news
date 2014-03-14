@@ -1,25 +1,21 @@
 <?php
+
 /**
- * English language file
- *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Myron Turner <turnermm02@shaw.ca>
+ * 
+ * @author Myron Turner <turnermm02@shaw.ca>
+ * @author Thor Weinreich <thorweinreich@nefkom.net>
  */
-
-// for admin plugins, the menu prompt to be displayed in the admin menu
-// if set here, the plugin doesn't need to override the getMenuText() method
-$lang['menu'] = 'Admin News...'; 
-
-$lang['btn_prune'] = 'Auswahl l&ouml;schen';
-$lang['btn_restore'] = 'R&uuml;ckg&auml;ngig';
-$lang['btn_review'] = 'L&ouml;schen überprüfen';
-$lang['btn_confirm'] = 'L&ouml;schen best&auml;tigen';
-$lang['invalid'] = 'Falsche Eingabe!';
-$lang['btn_generate'] = 'Aktualisiere Feed';
-$lang['menu'] = 'News plugin Administration';
-
-
-$lang['instructions'] ='<p>Markieren Sie das "L&ouml;schen" K&auml;stchen neben dem Feed Namen, um diesen zum L&ouml;schen auszuw&auml;hlen.
+$lang['menu']                  = 'News plugin Administration';
+$lang['btn_prune']             = 'Auswahl l&ouml;schen';
+$lang['btn_restore']           = 'R&uuml;ckg&auml;ngig';
+$lang['btn_review']            = 'L&ouml;schen ï¿½berprï¿½fen';
+$lang['btn_confirm']           = 'L&ouml;schen best&auml;tigen';
+$lang['invalid']               = 'Falsche Eingabe!';
+$lang['btn_generate']          = 'Aktualisiere Feed';
+$lang['btn_info']              = 'Hilfe anzeigen/verstecken';
+$lang['no_permission']         = 'Du hast nicht die Berechtigung dazu, einen News-Feed zu erstellen oder zu bearbeiten.';
+$lang['instructions']          = '<p>Markieren Sie das "L&ouml;schen" K&auml;stchen neben dem Feed Namen, um diesen zum L&ouml;schen auszuw&auml;hlen.
  Danach klicken Sie auf den "Auswahl L&ouml;schen" Knopf &uuml;ber der Tabelle. Sie k&ouml;nnen mehrere Feeds auf einmal l&ouml;schen, sofern
  Sie die K&auml;stchen mehrerer Feeds ausgew&auml;hlt haben. Die Feed Tabelle wird automatisch aktualisiert, um Ihnen eine Ergebnisvorschau
  anzuzeigen. Sollten Sie einen Feed unabsichtlich ausgew&auml;hlt haben, so k&ouml;nnen sie mit dem Knopf "R&uuml;ckg&auml;ngig" Ihre Auswahl
