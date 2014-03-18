@@ -9,7 +9,7 @@
 $lang['menu']                  = 'News plugin Administration';
 $lang['btn_prune']             = 'Auswahl l&ouml;schen';
 $lang['btn_restore']           = 'R&uuml;ckg&auml;ngig';
-$lang['btn_review']            = 'L&ouml;schen �berpr�fen';
+$lang['btn_review']            = 'L&ouml;schen &uuml;berpr&uuml;fen';
 $lang['btn_confirm']           = 'L&ouml;schen best&auml;tigen';
 $lang['invalid']               = 'Falsche Eingabe!';
 $lang['btn_generate']          = 'Aktualisiere Feed';
