@@ -50,7 +50,6 @@ class helper_plugin_news extends Dokuwiki_Plugin {
         return $this->wasUpdated;
     }
     function setUpdate($ar = null){	 
-        if(!$ar) return;
         $this->header = $ar[0];
         $this->sub_feed = trim($ar[1]);
         $this->wasUpdated = true;
