@@ -61,6 +61,10 @@ class helper_plugin_news extends Dokuwiki_Plugin {
         $this->sub_feed = trim($ns);
    }
     function getMetaDirectory() {
+       if(preg_match("/notset/i", $this->sub_feed)) {          
+          $this->sub_feed ='/'; 
+          return "newsfeed:";          
+       }
        return 'newsfeed:' .  $this->sub_feed . ':';
     } 
     function getMetaFN($file,$ext) {

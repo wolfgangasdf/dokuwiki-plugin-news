@@ -250,7 +250,7 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
     
 		    $create_time = 0;
 			$ttl = $this->getConf('ttl');
-            if($subfeed) {
+            if($subfeed && $subfeed !='NotSet') {
                 $xml_file = DOKU_INC . $subfeed . '_news.xml';
             }
 	        else $xml_file = DOKU_INC . 'news_feed.xml';
