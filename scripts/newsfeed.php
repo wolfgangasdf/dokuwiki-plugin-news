@@ -15,7 +15,7 @@ $newsfeed_ini = DOKU_INC . 'lib/plugins/news/scripts/newsfeed.ini';
 global $conf;
 global $newsChannelTitle;
 global $newsChannelDescription;	
-global $newsFeedURL;
+global $newsFeedURL,$INPUT;
 $newsFeedURL = "";
 $refresh=false;
 $title = "";
@@ -24,14 +24,14 @@ $test = "";
 if(isset($_POST) && isset($_POST['feed']) && $_POST['feed']=='refresh') {
   $refresh = true;
   if(isset($_POST['title'])) {
-      $title = $_POST['title']; 
+      $title = $INPUT->str('title'); 
   }
 }
 else if($argc > 1) {
     $title = $argv[1]; 
 }
 else if(isset($_GET) && isset($_GET['feed'])) {
-  $title = $_GET['feed'];
+  $title = $INPUT->str('feed');
 }
 if(isset($_POST)  || isset($_GET) ) {
   if(isset($_REQUEST['test']) && !is_writable(DOKU_INC) ) {
@@ -101,7 +101,7 @@ else {
 				else echo "New Feed may not have been not created<br />";
 			}
 
-			$id = $_POST['feed_ref'];
+			$id = htmlentities($_POST['feed_ref']);
 			$ret_url = DOKU_URL . 'doku.php?id=' . $id;
 			echo '<br /><a href ="' . $ret_url . '" style="font-size: 12pt;color:#8cacbb">Return to ' . $id . '</a>';
 	}
