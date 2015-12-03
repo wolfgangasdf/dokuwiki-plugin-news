@@ -101,7 +101,7 @@ else {
 				else echo "New Feed may not have been not created<br />";
 			}
 
-         	        $id = urldecode($INPUT->str('feed_ref'));
+         	        $id = htmlentities(urldecode($INPUT->str('feed_ref')));
 			$ret_url = DOKU_URL . 'doku.php?id=' . $id;
 			echo '<br /><a href ="' . $ret_url . '" style="font-size: 12pt;color:#8cacbb">Return to ' . $id . '</a>';
 	}
