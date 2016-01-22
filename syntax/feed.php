@@ -47,7 +47,7 @@
         /**
          * Handle the match
          */
-        function handle($match, $state, $pos, &$handler){
+        function handle($match, $state, $pos, Doku_Handler $handler){
         
             $match=substr($match,11,-2);
 			if($match) {
@@ -75,7 +75,7 @@
         /**
          * Create output
          */
-        function render($mode, &$renderer, $data) {
+        function render($mode, Doku_Renderer $renderer, $data) {
 		if (empty($data)) return false;
 		    global $ID;
             if($mode == 'xhtml'){

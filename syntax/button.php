@@ -47,7 +47,7 @@
         /**
          * Handle the match
          */
-        function handle($match, $state, $pos, &$handler){
+        function handle($match, $state, $pos, Doku_Handler $handler){
 		
 	   global $USERINFO;
 	   global $ID;
@@ -84,7 +84,7 @@
         /**
          * Create output
          */
-        function render($mode, &$renderer, $data) {
+        function render($mode, Doku_Renderer $renderer, $data) {
 		
 	    global $USERINFO;
 	    global $INFO;

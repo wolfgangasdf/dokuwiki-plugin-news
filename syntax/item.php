@@ -52,7 +52,7 @@
         /**
          * Handle the match
          */
-        function handle($match, $state, $pos, &$handler){
+        function handle($match, $state, $pos, Doku_Handler $handler){
         
         
             switch ($state) {
@@ -91,7 +91,7 @@
         /**
          * Create output
          */
-        function render($mode, &$renderer, $data) {
+        function render($mode, Doku_Renderer $renderer, $data) {
 		if (empty($data)) return false;
             if($mode == 'xhtml'){
                 list($state, $match) = $data;
