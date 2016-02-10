@@ -5,6 +5,7 @@
  * 
  * @author Myron Turner <turnermm02@shaw.ca>
  * @author Thor Weinreich <thorweinreich@nefkom.net>
+ * @author Dana <dannax3@gmx.de>
  */
 $lang['menu']                  = 'News plugin Administration';
 $lang['btn_prune']             = 'Auswahl l&ouml;schen';
@@ -14,6 +15,8 @@ $lang['btn_confirm']           = 'L&ouml;schen best&auml;tigen';
 $lang['invalid']               = 'Falsche Eingabe!';
 $lang['btn_generate']          = 'Aktualisiere Feed';
 $lang['btn_info']              = 'Hilfe anzeigen/verstecken';
+$lang['btn_confirmfeed']       = 'Bestätigen eines Subfeeds';
+$lang['select_feed']           = 'Auswählen eines Subfeeds';
 $lang['no_permission']         = 'Du hast nicht die Berechtigung dazu, einen News-Feed zu erstellen oder zu bearbeiten.';
 $lang['instructions']          = '<p>Markieren Sie das "L&ouml;schen" K&auml;stchen neben dem Feed Namen, um diesen zum L&ouml;schen auszuw&auml;hlen.
  Danach klicken Sie auf den "Auswahl L&ouml;schen" Knopf &uuml;ber der Tabelle. Sie k&ouml;nnen mehrere Feeds auf einmal l&ouml;schen, sofern
