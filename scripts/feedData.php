@@ -20,6 +20,13 @@ class feedData {
 
         $metafile = $this->helper->getMetaFN('pagedata', '.ser');
 		$this->meta_data = $this->_readFile($metafile, true);	
+        uasort($this->meta_data,function($a,$b) {
+            $ta = strtotime($a['create_time']);
+            $tb = strtotime($b['create_time']);
+            if ($ta==$tb) return 0;
+            return ($ta>$tb)?-1:1;
+        });
+	
 		$this->get_md5_array();
               
         $metafile = $this->helper->getMetaFN('timestamp','.meta') ;				        
