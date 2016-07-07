@@ -234,6 +234,7 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
 	 function generate($subfeed) {	
 		global $newsChannelTitle;
         global $newsChannelDescription;	
+        global $newsChannelTtl;
         $newsfeed_ini = DOKU_INC . 'lib/plugins/news/scripts/newsfeed.ini';
          
          if(file_exists($newsfeed_ini)) {
@@ -241,11 +242,13 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
             $which = isset($ini_array[$subfeed]) ? $subfeed : 'default';
             $newsChannelTitle = $ini_array[$which]['title'];
             $newsChannelDescription = $ini_array[$which]['description'] ;         
+            $newsChannelTtl = isset($ini_array[$which]['ttl']) ? $ini_array[$which]['ttl'] : $this->getConf('ttl');
         }
         else {
             $subfeed = "";
             $newsChannelDescription = $this->getConf('desc');
             $newsChannelTitle=$this->getConf('title');
+            $newsChannelTtl = $this->getConf('ttl');
         }
     
 		    $create_time = 0;

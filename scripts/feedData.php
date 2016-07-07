@@ -14,6 +14,7 @@ class feedData {
 	function feedData($subfeed) {
 		global $newsChannelTitle;
 		global $newsChannelDescription;	
+		global $newsChannelTtl;
 
         $this->helper = plugin_load('helper', 'news');
          $this->helper->setSubFeed($subfeed) ;    
@@ -181,6 +182,12 @@ class feedData {
 		global $newsChannelDescription;
 		if(!$newsChannelDescription) return  'DokuWiki News Feed';
 		return $newsChannelDescription;
+	}
+	
+	function channel_ttl() {
+		global $newsChannelTtl;
+		if(!$newsChannelTtl) return $this->ttl;
+		return $newsChannelTtl;
 	}
 }
 
