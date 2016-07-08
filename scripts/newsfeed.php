@@ -11,16 +11,18 @@ else {
 
 require_once  INC_DIR . '/init.php';
 require_once DOKU_INC . 'lib/plugins/news/scripts/rss.php';
+require_once DOKU_INC . 'lib/plugins/news/helper.php';
 $newsfeed_ini = DOKU_INC . 'lib/plugins/news/scripts/newsfeed.ini';
 global $conf;
 global $newsChannelTitle;
 global $newsChannelDescription;	
 global $newsChannelTtl;
-global $newsFeedURL,$INPUT;
+global $newsFeedURL,$INPUT, $helper;
 $newsFeedURL = "";
 $refresh=false;
 $title = "";
 $test = "";
+$helper = new  helper_plugin_news();	
 
 if(isset($_POST) && isset($_POST['feed']) && $_POST['feed']=='refresh') {
   $refresh = true;
@@ -56,7 +58,8 @@ else {
     $which = isset($ini_array[$title]) ? $title : 'default';
     $newsChannelTitle = $ini_array[$which]['title'];
     $newsChannelDescription = $ini_array[$which]['description'] ;
-    $newsChannelTtl = isset($ini_array[$which]['ttl']) ? $ini_array[$which]['ttl'] : $this->getConf('ttl');
+    $newsChannelTtl = isset($ini_array[$which]['ttl']) ? $ini_array[$which]['ttl'] : $helper->ttl();
+    
 }
 
 	if(isset($conf['plugin']['news'])) {

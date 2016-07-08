@@ -179,4 +179,7 @@ class helper_plugin_news extends Dokuwiki_Plugin {
 			}
 			io_saveFile($file,$data);
 	}
+    function ttl() {        
+        return $this->getConf('ttl');
+    }
 }
