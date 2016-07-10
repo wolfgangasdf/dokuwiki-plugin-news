@@ -6,9 +6,9 @@ require_once DOKU_INC . "lib/plugins/news/scripts/feedData.php";
 
 class externalNewsFeed extends feedData {
 var $ttl;
-function externalNewsFeed($outfile=null,$ttl=720, $subfeed = "") {
+function __construct($outfile=null,$ttl=720, $subfeed = "") {
     $this->ttl = $ttl;
-    parent::feedData($subfeed);
+    parent::__construct($subfeed);
 	$handle = null;
 	
 		if($outfile) {

@@ -11,7 +11,7 @@ class feedData {
 	var $currentMetaArray;	
 	var $newsFeedDate;
 	var $helper;
-	function feedData($subfeed) {
+    function __construct($subfeed) {    
 		global $newsChannelTitle;
 		global $newsChannelDescription;	
 		global $newsChannelTtl;
