@@ -132,7 +132,7 @@ class helper_plugin_news extends Dokuwiki_Plugin {
 			  }
 			 else $feed_data[$i]['title'] = "News Item";         
 			$data[$i] = preg_replace("#^\s*<news(.*?)>#","",$data[$i]);			
-			$feed_data[$i]['item'] = $this->render($data[$i]);	
+			$feed_data[$i]['item'] = $this->render_text($data[$i]);	
 			$feed_data[$i]['name'] = 'rss_' . ($i+1);
        }
 	   
@@ -153,7 +153,7 @@ class helper_plugin_news extends Dokuwiki_Plugin {
 		$feed_data = array(); 
 		for($i=0, $j=0; $i<count($ar); $i+=2, $j++) {
 		    $feed_data[$j]['title'] = str_replace('=',"",$ar[$i]);
-		    $feed_data[$j]['item'] = $this->render($ar[$i+1]);
+		    $feed_data[$j]['item'] = $this->render_text($ar[$i+1]);
 			$check=false;
 			$feed_data[$j]['name'] =  sectionID($ar[$i],$check);
 		}
