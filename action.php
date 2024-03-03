@@ -21,7 +21,7 @@ class action_plugin_news extends DokuWiki_Action_Plugin {
                                    'process_feed');
     }
 
-	function action_plugin_news() {
+	function __construct() {
 	    global $newsUpdated;
 		$this->helper = $this->loadHelper('news', true);
     }		

@@ -22,7 +22,7 @@ class admin_plugin_news extends DokuWiki_Admin_Plugin {
 	var $subfeed_selected = 0;
 	var $subfeed_name = "";
     
-  	function admin_plugin_news() {
+  	function __construct() {
 		   $this->helper =& plugin_load('helper', 'news');
            if($_REQUEST['subfeeds'] != 'NotSet') {
                $this->helper->setSubFeed($_REQUEST['subfeeds']);

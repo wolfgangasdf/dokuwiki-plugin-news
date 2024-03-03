@@ -19,7 +19,7 @@
     class syntax_plugin_news_feed extends DokuWiki_Syntax_Plugin {
         var $helper;  
 		var $is_news_mgr;
-	    function syntax_plugin_news_feed() {
+	    function __construct() {
 		   $this->helper =& plugin_load('helper', 'news');
 		}		
         /**
